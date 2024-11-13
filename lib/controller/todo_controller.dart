@@ -55,6 +55,11 @@ class TodoController {
     }
   }
 
+  Future<void> deleteAllTodos() async {
+    todos.clear();
+    await _saveTodos();
+  }
+
   void _sortTodos() {
     todos.sort((a, b) {
       if (a.isCompleted == b.isCompleted) {
