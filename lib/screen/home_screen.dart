@@ -78,6 +78,11 @@ class HomeScreenState extends State<HomeScreen> {
     setState(() {}); // UI 업데이트
   }
 
+  Future<void> _handleTogglePin(int index) async {
+    await _todoController.togglePin(index);
+    setState(() {}); // UI 업데이트
+  }
+
   Future<void> _handleDeleteAll() async {
     final bool? shouldDelete = await showDialog<bool>(
       context: context,
@@ -175,6 +180,7 @@ class HomeScreenState extends State<HomeScreen> {
               onToggle: _handleToggle,
               onEdit: _handleEdit,
               onDelete: _handleDelete,
+              onTogglePin: _handleTogglePin,
               onDeleteAll: _handleDeleteAll,
             ),
       floatingActionButton: FloatingActionButton(

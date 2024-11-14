@@ -6,6 +6,7 @@ class TodoList extends StatelessWidget {
   final Function(int) onToggle;
   final Function(int) onEdit;
   final Function(int) onDelete;
+  final Function(int) onTogglePin;
   final VoidCallback onDeleteAll;
 
   const TodoList({
@@ -14,6 +15,7 @@ class TodoList extends StatelessWidget {
     required this.onToggle,
     required this.onEdit,
     required this.onDelete,
+    required this.onTogglePin,
     required this.onDeleteAll,
   });
 
@@ -28,7 +30,7 @@ class TodoList extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 TextButton.icon(
-                  onPressed: onDeleteAll, // 직접 콜백 호출
+                  onPressed: onDeleteAll,
                   icon:
                       const Icon(Icons.delete_sweep, color: Color(0xFFFF4552)),
                   label: const Text(
@@ -44,21 +46,36 @@ class TodoList extends StatelessWidget {
             itemCount: todos.length,
             separatorBuilder: (context, index) => const Divider(height: 1),
             itemBuilder: (context, index) {
+              final todo = todos[index];
               return ListTile(
                 contentPadding:
                     const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                title: Text(
-                  todos[index].text,
-                  style: TextStyle(
-                    decoration: todos[index].isCompleted
-                        ? TextDecoration.lineThrough
-                        : null,
-                    color:
-                        todos[index].isCompleted ? Colors.grey : Colors.black,
-                  ),
+                title: Row(
+                  children: [
+                    if (todo.isPinned)
+                      const Padding(
+                        padding: EdgeInsets.only(right: 8.0),
+                        child: Icon(
+                          Icons.push_pin,
+                          size: 16,
+                          color: Color(0xFF62BFAD),
+                        ),
+                      ),
+                    Expanded(
+                      child: Text(
+                        todo.text,
+                        style: TextStyle(
+                          decoration: todo.isCompleted
+                              ? TextDecoration.lineThrough
+                              : null,
+                          color: todo.isCompleted ? Colors.grey : Colors.black,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
                 leading: Checkbox(
-                  value: todos[index].isCompleted,
+                  value: todo.isCompleted,
                   onChanged: (_) => onToggle(index),
                   activeColor: const Color(0xFF62BFAD),
                 ),
@@ -71,11 +88,29 @@ class TodoList extends StatelessWidget {
                         onEdit(index);
                         break;
                       case 'delete':
-                        onDelete(index); // 직접 콜백 호출
+                        onDelete(index);
+                        break;
+                      case 'pin':
+                        onTogglePin(index);
                         break;
                     }
                   },
                   itemBuilder: (context) => [
+                    PopupMenuItem<String>(
+                      value: 'pin',
+                      child: Row(
+                        children: [
+                          Icon(
+                            todo.isPinned
+                                ? Icons.push_pin_outlined
+                                : Icons.push_pin,
+                            color: const Color(0xFFF87C4C),
+                          ),
+                          const SizedBox(width: 8),
+                          Text(todo.isPinned ? '고정 해제' : '고정'),
+                        ],
+                      ),
+                    ),
                     const PopupMenuItem<String>(
                       value: 'edit',
                       child: Row(

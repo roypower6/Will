@@ -60,12 +60,26 @@ class TodoController {
     await _saveTodos();
   }
 
+  Future<void> togglePin(int index) async {
+    if (index >= 0 && index < todos.length) {
+      todos[index].isPinned = !todos[index].isPinned;
+      _sortTodos();
+      await _saveTodos();
+    }
+  }
+
   void _sortTodos() {
     todos.sort((a, b) {
-      if (a.isCompleted == b.isCompleted) {
-        return a.originalIndex.compareTo(b.originalIndex);
+      // 1. 먼저 고정 여부로 정렬
+      if (a.isPinned != b.isPinned) {
+        return a.isPinned ? -1 : 1;
       }
-      return a.isCompleted ? 1 : -1;
+      // 2. 그 다음 완료 여부로 정렬
+      if (a.isCompleted != b.isCompleted) {
+        return a.isCompleted ? 1 : -1;
+      }
+      // 3. 마지막으로 원래 순서로 정렬
+      return a.originalIndex.compareTo(b.originalIndex);
     });
   }
 }
