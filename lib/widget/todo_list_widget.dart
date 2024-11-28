@@ -58,7 +58,7 @@ class TodoList extends StatelessWidget {
                         child: Icon(
                           Icons.push_pin,
                           size: 16,
-                          color: Color(0xFF62BFAD),
+                          color: Color(0xFFF87C4C),
                         ),
                       ),
                     Expanded(
