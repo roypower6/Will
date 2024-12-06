@@ -62,7 +62,7 @@ class BuildDrawer extends StatelessWidget {
                       style: const TextStyle(color: Colors.white),
                     ),
                     const Text(
-                      'version 1.0.4',
+                      'version 1.0.5',
                       style: TextStyle(color: Colors.white, fontSize: 15),
                     ),
                   ],

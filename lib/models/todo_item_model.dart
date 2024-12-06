@@ -3,12 +3,16 @@ class TodoItem {
   bool isCompleted;
   bool isPinned;
   int originalIndex;
+  String category;
+  String description;
 
   TodoItem({
     required this.text,
     this.isCompleted = false,
     this.isPinned = false,
     required this.originalIndex,
+    this.category = '',
+    this.description = '',
   });
 
   Map<String, dynamic> toJson() {
@@ -17,6 +21,8 @@ class TodoItem {
       'isCompleted': isCompleted,
       'isPinned': isPinned,
       'originalIndex': originalIndex,
+      'category': category,
+      'description': description,
     };
   }
 
@@ -26,6 +32,8 @@ class TodoItem {
       isCompleted: json['isCompleted'] ?? false,
       isPinned: json['isPinned'] ?? false,
       originalIndex: json['originalIndex'],
+      category: json['category'] ?? '',
+      description: json['description'] ?? '',
     );
   }
 }

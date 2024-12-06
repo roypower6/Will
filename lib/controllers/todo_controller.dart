@@ -32,10 +32,12 @@ class TodoController extends GetxController {
     await prefs.setString(_storageKey, todosString);
   }
 
-  Future<void> addTodo(String text) async {
+  Future<void> addTodo(String text, {String category = '', String description = ''}) async {
     _todos.add(TodoItem(
       text: text,
       originalIndex: _todos.length,
+      category: category,
+      description: description,
     ));
     _sortTodos();
     await _saveTodos();
@@ -50,9 +52,11 @@ class TodoController extends GetxController {
     }
   }
 
-  Future<void> editTodo(int index, String newText) async {
+  Future<void> editTodo(int index, String newText, {String category = '', String description = ''}) async {
     if (index >= 0 && index < _todos.length) {
       _todos[index].text = newText;
+      _todos[index].category = category;
+      _todos[index].description = description;
       _todos.refresh();
       await _saveTodos();
     }

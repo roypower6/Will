@@ -15,7 +15,7 @@ class HomeScreen extends StatelessWidget {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   Future<void> _showAddTodoDialog() async {
-    final result = await showDialog<String>(
+    final result = await showDialog<Map<String, String>>(
       context: Get.context!,
       builder: (context) => const CustomDialog(
         title: '새로 할 일',
@@ -24,8 +24,12 @@ class HomeScreen extends StatelessWidget {
       ),
     );
 
-    if (result != null && result.isNotEmpty) {
-      await Get.find<TodoController>().addTodo(result);
+    if (result != null && result['text']!.isNotEmpty) {
+      await Get.find<TodoController>().addTodo(
+        result['text']!,
+        category: result['category'] ?? '',
+        description: result['description'] ?? '',
+      );
     }
   }
 
@@ -80,17 +84,24 @@ class HomeScreen extends StatelessWidget {
                   todos: todos,
                   onToggle: controller.toggleTodo,
                   onEdit: (index) async {
-                    final result = await showDialog<String>(
+                    final result = await showDialog<Map<String, String>>(
                       context: context,
                       builder: (context) => CustomDialog(
                         title: '할 일 수정',
                         submitText: '수정',
                         hintText: '할 일을 입력해주세요.',
                         initialText: todos[index].text,
+                        initialCategory: todos[index].category,
+                        initialDescription: todos[index].description,
                       ),
                     );
-                    if (result != null && result.isNotEmpty) {
-                      await controller.editTodo(index, result);
+                    if (result != null && result['text']!.isNotEmpty) {
+                      await controller.editTodo(
+                        index,
+                        result['text']!,
+                        category: result['category'] ?? '',
+                        description: result['description'] ?? '',
+                      );
                     }
                   },
                   onDelete: (index) async {
