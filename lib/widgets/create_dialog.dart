@@ -12,7 +12,6 @@ class CustomDialog extends StatelessWidget {
     required this.submitText,
     required this.hintText,
     this.initialText,
-    required String initialValue,
   });
 
   @override
@@ -20,7 +19,7 @@ class CustomDialog extends StatelessWidget {
     final controller = TextEditingController(text: initialText);
 
     return Dialog(
-      backgroundColor: const Color(0xFFF9F7E8),
+      backgroundColor: Theme.of(context).colorScheme.background,
       elevation: 0,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16),
@@ -33,10 +32,10 @@ class CustomDialog extends StatelessWidget {
           children: [
             Text(
               title,
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
-                color: Color(0xFF62BFAD),
+                color: Theme.of(context).colorScheme.primary,
               ),
             ),
             const SizedBox(height: 20),
@@ -48,15 +47,15 @@ class CustomDialog extends StatelessWidget {
                   color: Colors.grey[400],
                 ),
                 filled: true,
-                fillColor: Colors.white,
+                fillColor: Theme.of(context).colorScheme.surface,
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
                   borderSide: BorderSide.none,
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
-                  borderSide: const BorderSide(
-                    color: Color(0xFF62BFAD),
+                  borderSide: BorderSide(
+                    color: Theme.of(context).colorScheme.primary,
                     width: 2,
                   ),
                 ),
@@ -75,7 +74,7 @@ class CustomDialog extends StatelessWidget {
                 TextButton(
                   onPressed: () => Navigator.of(context).pop(),
                   style: TextButton.styleFrom(
-                    foregroundColor: Colors.grey,
+                    foregroundColor: Theme.of(context).textTheme.bodyLarge?.color?.withOpacity(0.6),
                   ),
                   child: const Text('취소'),
                 ),
@@ -87,7 +86,7 @@ class CustomDialog extends StatelessWidget {
                     }
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF62BFAD),
+                    backgroundColor: Theme.of(context).colorScheme.primary,
                     foregroundColor: Colors.white,
                     elevation: 0,
                     padding: const EdgeInsets.symmetric(

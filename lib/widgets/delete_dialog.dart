@@ -6,7 +6,7 @@ class DeleteDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Dialog(
-      backgroundColor: const Color(0xFFF9F7E8),
+      backgroundColor: Theme.of(context).colorScheme.background,
       elevation: 0,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16),
@@ -16,12 +16,12 @@ class DeleteDialog extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Text(
+            Text(
               '할 일 삭제',
               style: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
-                color: Color(0xFF62BFAD),
+                color: Theme.of(context).colorScheme.primary,
               ),
             ),
             const SizedBox(height: 16),
@@ -38,7 +38,11 @@ class DeleteDialog extends StatelessWidget {
                 TextButton(
                   onPressed: () => Navigator.pop(context, false),
                   style: TextButton.styleFrom(
-                    foregroundColor: Colors.grey,
+                    foregroundColor: Theme.of(context)
+                        .textTheme
+                        .bodyLarge
+                        ?.color
+                        ?.withOpacity(0.6),
                   ),
                   child: const Text('취소'),
                 ),
@@ -46,7 +50,7 @@ class DeleteDialog extends StatelessWidget {
                 ElevatedButton(
                   onPressed: () => Navigator.pop(context, true),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.red,
+                    backgroundColor: Theme.of(context).colorScheme.error,
                     foregroundColor: Colors.white,
                     elevation: 0,
                     padding: const EdgeInsets.symmetric(

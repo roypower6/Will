@@ -31,20 +31,24 @@ class TodoList extends StatelessWidget {
               children: [
                 TextButton.icon(
                   onPressed: onDeleteAll,
-                  icon:
-                      const Icon(Icons.delete_sweep, color: Color(0xFFFF4552)),
-                  label: const Text(
+                  icon: Icon(Icons.delete_sweep,
+                      color:
+                          Theme.of(context).colorScheme.error.withOpacity(0.8)),
+                  label: Text(
                     '전체 삭제',
-                    style: TextStyle(color: Color(0xFFFF4552)),
+                    style: TextStyle(
+                        color: Theme.of(context)
+                            .colorScheme
+                            .error
+                            .withOpacity(0.8)),
                   ),
                 ),
               ],
             ),
           ),
         Expanded(
-          child: ListView.separated(
+          child: ListView.builder(
             itemCount: todos.length,
-            separatorBuilder: (context, index) => const Divider(height: 1),
             itemBuilder: (context, index) {
               final todo = todos[index];
               return ListTile(
@@ -53,12 +57,12 @@ class TodoList extends StatelessWidget {
                 title: Row(
                   children: [
                     if (todo.isPinned)
-                      const Padding(
-                        padding: EdgeInsets.only(right: 8.0),
+                      Padding(
+                        padding: const EdgeInsets.only(right: 8.0),
                         child: Icon(
                           Icons.push_pin,
                           size: 16,
-                          color: Color(0xFFF87C4C),
+                          color: Theme.of(context).colorScheme.secondary,
                         ),
                       ),
                     Expanded(
@@ -68,7 +72,13 @@ class TodoList extends StatelessWidget {
                           decoration: todo.isCompleted
                               ? TextDecoration.lineThrough
                               : null,
-                          color: todo.isCompleted ? Colors.grey : Colors.black,
+                          color: todo.isCompleted
+                              ? Theme.of(context)
+                                  .textTheme
+                                  .bodyLarge
+                                  ?.color
+                                  ?.withOpacity(0.5)
+                              : Theme.of(context).textTheme.bodyLarge?.color,
                         ),
                       ),
                     ),
@@ -77,11 +87,12 @@ class TodoList extends StatelessWidget {
                 leading: Checkbox(
                   value: todo.isCompleted,
                   onChanged: (_) => onToggle(index),
-                  activeColor: const Color(0xFF62BFAD),
+                  activeColor: Theme.of(context).colorScheme.primary,
                 ),
                 trailing: PopupMenuButton<String>(
-                  color: const Color(0xFFF9F7E8),
-                  icon: const Icon(Icons.more_vert, color: Color(0xFF62BFAD)),
+                  color: Theme.of(context).colorScheme.surface,
+                  icon: Icon(Icons.more_vert,
+                      color: Theme.of(context).colorScheme.primary),
                   onSelected: (value) {
                     switch (value) {
                       case 'edit':
@@ -104,30 +115,32 @@ class TodoList extends StatelessWidget {
                             todo.isPinned
                                 ? Icons.push_pin_outlined
                                 : Icons.push_pin,
-                            color: const Color(0xFFF87C4C),
+                            color: Theme.of(context).colorScheme.secondary,
                           ),
                           const SizedBox(width: 8),
                           Text(todo.isPinned ? '고정 해제' : '고정'),
                         ],
                       ),
                     ),
-                    const PopupMenuItem<String>(
+                    PopupMenuItem<String>(
                       value: 'edit',
                       child: Row(
                         children: [
-                          Icon(Icons.edit, color: Color(0xFF62BFAD)),
-                          SizedBox(width: 8),
-                          Text('수정'),
+                          Icon(Icons.edit,
+                              color: Theme.of(context).colorScheme.primary),
+                          const SizedBox(width: 8),
+                          const Text('수정'),
                         ],
                       ),
                     ),
-                    const PopupMenuItem<String>(
+                    PopupMenuItem<String>(
                       value: 'delete',
                       child: Row(
                         children: [
-                          Icon(Icons.delete, color: Color(0xFFFF4552)),
-                          SizedBox(width: 8),
-                          Text('삭제'),
+                          Icon(Icons.delete,
+                              color: Theme.of(context).colorScheme.error),
+                          const SizedBox(width: 8),
+                          const Text('삭제'),
                         ],
                       ),
                     ),

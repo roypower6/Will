@@ -1,14 +1,13 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
-import 'package:will/controllers/todo_controller.dart'; // 경로 변경됨
+import 'package:will/controllers/todo_controller.dart';
 import 'package:will/widgets/create_dialog.dart';
-import 'package:will/widgets/delete_dialog_widget.dart';
+import 'package:will/widgets/delete_dialog.dart';
 import 'package:will/widgets/empty_state_widget.dart';
 import 'package:will/widgets/left_drawer_widget.dart';
 import 'package:will/widgets/todo_list_widget.dart';
 
 class HomeScreen extends StatelessWidget {
-  // StatefulWidget에서 StatelessWidget으로 변경
   HomeScreen({super.key}) {
     Get.put(TodoController()); // TodoController 초기화
   }
@@ -22,7 +21,6 @@ class HomeScreen extends StatelessWidget {
         title: '새로 할 일',
         submitText: '추가',
         hintText: '할 일을 입력해주세요.',
-        initialValue: '',
       ),
     );
 
@@ -38,27 +36,33 @@ class HomeScreen extends StatelessWidget {
     return Scaffold(
       key: _scaffoldKey,
       drawer: BuildDrawer(todos: controller.todos, context: context),
-      backgroundColor: const Color(0xFFF9F7E8),
+      backgroundColor: Theme.of(context).colorScheme.background,
       body: SafeArea(
         child: Column(
           children: [
             // AppBar
             Padding(
-              padding: const EdgeInsets.all(16.0),
+              padding: const EdgeInsets.all(8.0),
               child: Row(
                 children: [
                   IconButton(
-                    icon: const Icon(Icons.menu),
+                    icon: Icon(
+                      Icons.menu,
+                      color: Theme.of(context).colorScheme.primary,
+                      size: 30,
+                    ),
                     onPressed: () {
                       _scaffoldKey.currentState?.openDrawer();
                     },
                   ),
-                  const Expanded(
+                  const SizedBox(width: 5),
+                  Expanded(
                     child: Text(
-                      'Todo',
+                      'Will',
                       style: TextStyle(
-                        fontSize: 20,
+                        fontSize: 35,
                         fontWeight: FontWeight.bold,
+                        color: Theme.of(context).colorScheme.primary,
                       ),
                     ),
                   ),
@@ -81,8 +85,8 @@ class HomeScreen extends StatelessWidget {
                       builder: (context) => CustomDialog(
                         title: '할 일 수정',
                         submitText: '수정',
-                        hintText: '할 일을 입력하세요.',
-                        initialValue: todos[index].text,
+                        hintText: '할 일을 입력해주세요.',
+                        initialText: todos[index].text,
                       ),
                     );
                     if (result != null && result.isNotEmpty) {
@@ -120,8 +124,8 @@ class HomeScreen extends StatelessWidget {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: _showAddTodoDialog,
-        backgroundColor: const Color(0xFF87C4A3),
-        child: const Icon(Icons.add),
+        backgroundColor: Theme.of(context).colorScheme.primary,
+        child: const Icon(Icons.add, color: Colors.white),
       ),
     );
   }

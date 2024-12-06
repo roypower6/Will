@@ -1,21 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:will/models/todo_item_model.dart';
 import 'package:will/screens/app_info_screen.dart';
+import 'package:get/get.dart';
+import 'package:will/controllers/theme_controller.dart';
 
 class BuildDrawer extends StatelessWidget {
+  final List<TodoItem> _todos;
+  final BuildContext context;
+
   const BuildDrawer({
     super.key,
     required List<TodoItem> todos,
     required this.context,
   }) : _todos = todos;
 
-  final List<TodoItem> _todos;
-  final BuildContext context;
-
   @override
   Widget build(BuildContext context) {
     final incompleteTasks = _todos.where((todo) => !todo.isCompleted).length;
     final completedTasks = _todos.where((todo) => todo.isCompleted).length;
+    final themeController = Get.find<ThemeController>();
 
     void navigateTo(BuildContext context, Widget screen) {
       Navigator.pop(context);
@@ -26,13 +29,13 @@ class BuildDrawer extends StatelessWidget {
     }
 
     return Drawer(
-      backgroundColor: const Color(0xFFF9F7E8),
+      backgroundColor: Theme.of(context).colorScheme.background,
       child: ListView(
         padding: EdgeInsets.zero,
         children: [
           DrawerHeader(
-            decoration: const BoxDecoration(
-              color: Color(0xFF62BFAD),
+            decoration: BoxDecoration(
+              color: Theme.of(context).colorScheme.primary,
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -59,7 +62,7 @@ class BuildDrawer extends StatelessWidget {
                       style: const TextStyle(color: Colors.white),
                     ),
                     const Text(
-                      'version 1.0.2',
+                      'version 1.0.4',
                       style: TextStyle(color: Colors.white, fontSize: 15),
                     ),
                   ],
@@ -69,14 +72,48 @@ class BuildDrawer extends StatelessWidget {
           ),
           ListTile(
             leading: const Icon(Icons.home),
-            title: const Text('Home'),
+            title: Text(
+              'Home',
+              style: TextStyle(
+                color:
+                    themeController.isDarkMode ? Colors.white : Colors.black87,
+              ),
+            ),
             onTap: () => Navigator.pop(context),
           ),
           ListTile(
             leading: const Icon(Icons.info_outline),
-            title: const Text("앱 정보"),
+            title: Text(
+              "앱 정보",
+              style: TextStyle(
+                color:
+                    themeController.isDarkMode ? Colors.white : Colors.black87,
+              ),
+            ),
             onTap: () => navigateTo(context, const AppInfoScreen()),
           ),
+          Obx(() => GestureDetector(
+                onTap: () {
+                  themeController.toggleTheme();
+                },
+                child: SwitchListTile(
+                  title: Text(themeController.isDarkMode ? '다크 모드' : '라이트 모드',
+                      style: TextStyle(
+                        color: themeController.isDarkMode
+                            ? Colors.white
+                            : Colors.black87,
+                      )),
+                  secondary: Icon(
+                    themeController.isDarkMode
+                        ? Icons.dark_mode
+                        : Icons.light_mode,
+                  ),
+                  value: themeController.isDarkMode,
+                  onChanged: (bool value) {
+                    themeController.toggleTheme();
+                  },
+                ),
+              )),
         ],
       ),
     );
