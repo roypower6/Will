@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:will/model/todo_item_model.dart';
-import 'package:will/screen/app_info_screen.dart';
+import 'package:will/models/todo_item_model.dart';
+import 'package:will/screens/app_info_screen.dart';
 
 class BuildDrawer extends StatelessWidget {
   const BuildDrawer({

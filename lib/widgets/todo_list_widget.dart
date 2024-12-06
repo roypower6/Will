@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:will/model/todo_item_model.dart';
+import 'package:will/models/todo_item_model.dart';
 
 class TodoList extends StatelessWidget {
   final List<TodoItem> todos;

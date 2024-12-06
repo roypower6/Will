@@ -12,6 +12,7 @@ class CustomDialog extends StatelessWidget {
     required this.submitText,
     required this.hintText,
     this.initialText,
+    required String initialValue,
   });
 
   @override
