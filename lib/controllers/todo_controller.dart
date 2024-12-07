@@ -5,9 +5,30 @@ import 'package:will/models/todo_item_model.dart';
 
 class TodoController extends GetxController {
   final RxList<TodoItem> _todos = <TodoItem>[].obs;
+  final RxString _selectedCategory = ''.obs;
   final String _storageKey = 'todos';
 
   List<TodoItem> get todos => _todos;
+  String get selectedCategory => _selectedCategory.value;
+
+  List<String> get categories {
+    final Set<String> categorySet = _todos
+        .where((todo) => todo.category.isNotEmpty)
+        .map((todo) => todo.category)
+        .toSet();
+    return ['', ...categorySet.toList()..sort()];
+  }
+
+  List<TodoItem> get filteredTodos {
+    if (_selectedCategory.value.isEmpty) {
+      return _todos;
+    }
+    return _todos.where((todo) => todo.category == _selectedCategory.value).toList();
+  }
+
+  void setSelectedCategory(String category) {
+    _selectedCategory.value = category;
+  }
 
   @override
   void onInit() {
@@ -32,7 +53,8 @@ class TodoController extends GetxController {
     await prefs.setString(_storageKey, todosString);
   }
 
-  Future<void> addTodo(String text, {String category = '', String description = ''}) async {
+  Future<void> addTodo(String text,
+      {String category = '', String description = ''}) async {
     _todos.add(TodoItem(
       text: text,
       originalIndex: _todos.length,
@@ -52,7 +74,8 @@ class TodoController extends GetxController {
     }
   }
 
-  Future<void> editTodo(int index, String newText, {String category = '', String description = ''}) async {
+  Future<void> editTodo(int index, String newText,
+      {String category = '', String description = ''}) async {
     if (index >= 0 && index < _todos.length) {
       _todos[index].text = newText;
       _todos[index].category = category;

@@ -1,8 +1,8 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:will/controllers/todo_controller.dart';
-import 'package:will/widgets/create_dialog.dart';
-import 'package:will/widgets/delete_dialog.dart';
+import 'package:will/widgets/dialogs/create_dialog.dart';
+import 'package:will/widgets/dialogs/delete_dialog.dart';
 import 'package:will/widgets/empty_state_widget.dart';
 import 'package:will/widgets/left_drawer_widget.dart';
 import 'package:will/widgets/todo_list_widget.dart';
