@@ -23,7 +23,9 @@ class TodoController extends GetxController {
     if (_selectedCategory.value.isEmpty) {
       return _todos;
     }
-    return _todos.where((todo) => todo.category == _selectedCategory.value).toList();
+    return _todos
+        .where((todo) => todo.category == _selectedCategory.value)
+        .toList();
   }
 
   void setSelectedCategory(String category) {
@@ -54,12 +56,15 @@ class TodoController extends GetxController {
   }
 
   Future<void> addTodo(String text,
-      {String category = '', String description = ''}) async {
+      {String category = '',
+      String description = '',
+      DateTime? dueDateTime}) async {
     _todos.add(TodoItem(
       text: text,
       originalIndex: _todos.length,
       category: category,
       description: description,
+      dueDateTime: dueDateTime,
     ));
     _sortTodos();
     await _saveTodos();
@@ -75,11 +80,14 @@ class TodoController extends GetxController {
   }
 
   Future<void> editTodo(int index, String newText,
-      {String category = '', String description = ''}) async {
+      {String category = '',
+      String description = '',
+      DateTime? dueDateTime}) async {
     if (index >= 0 && index < _todos.length) {
       _todos[index].text = newText;
       _todos[index].category = category;
       _todos[index].description = description;
+      _todos[index].dueDateTime = dueDateTime;
       _todos.refresh();
       await _saveTodos();
     }
@@ -117,7 +125,13 @@ class TodoController extends GetxController {
       if (a.isCompleted != b.isCompleted) {
         return a.isCompleted ? 1 : -1;
       }
-      // 3. 마지막으로 원래 순서로 정렬
+      // 3. 시간 순서로 정렬 (시간이 없는 항목은 마지막에)
+      if (a.dueDateTime != null && b.dueDateTime != null) {
+        return a.dueDateTime!.compareTo(b.dueDateTime!);
+      }
+      if (a.dueDateTime != null) return -1;
+      if (b.dueDateTime != null) return 1;
+      // 4. 마지막으로 원래 순서로 정렬
       return a.originalIndex.compareTo(b.originalIndex);
     });
     _todos.refresh(); // 정렬 후 UI 업데이트

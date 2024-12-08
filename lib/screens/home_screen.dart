@@ -15,7 +15,7 @@ class HomeScreen extends StatelessWidget {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   Future<void> _showAddTodoDialog() async {
-    final result = await showDialog<Map<String, String>>(
+    final result = await showDialog<Map<String, dynamic>>(
       context: Get.context!,
       builder: (context) => const CustomDialog(
         title: '새로 할 일',
@@ -29,6 +29,7 @@ class HomeScreen extends StatelessWidget {
         result['text']!,
         category: result['category'] ?? '',
         description: result['description'] ?? '',
+        dueDateTime: result['dueDateTime'], // 날짜와 시간을 함께 저장
       );
     }
   }
@@ -84,7 +85,7 @@ class HomeScreen extends StatelessWidget {
                   todos: todos,
                   onToggle: controller.toggleTodo,
                   onEdit: (index) async {
-                    final result = await showDialog<Map<String, String>>(
+                    final result = await showDialog<Map<String, dynamic>>(
                       context: context,
                       builder: (context) => CustomDialog(
                         title: '할 일 수정',
@@ -93,6 +94,8 @@ class HomeScreen extends StatelessWidget {
                         initialText: todos[index].text,
                         initialCategory: todos[index].category,
                         initialDescription: todos[index].description,
+                        initialDueDateTime:
+                            todos[index].dueDateTime, // 날짜와 시간을 함께 저장
                       ),
                     );
                     if (result != null && result['text']!.isNotEmpty) {
@@ -101,6 +104,7 @@ class HomeScreen extends StatelessWidget {
                         result['text']!,
                         category: result['category'] ?? '',
                         description: result['description'] ?? '',
+                        dueDateTime: result['dueDateTime'], // 날짜와 시간을 함께 저장
                       );
                     }
                   },

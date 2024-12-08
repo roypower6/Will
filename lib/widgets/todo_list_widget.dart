@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:will/controllers/todo_controller.dart';
 import 'package:will/models/todo_item_model.dart';
 
@@ -138,6 +139,23 @@ class TodoList extends StatelessWidget {
                                           ),
                                         ),
                                       ),
+                                      // 날짜와 시간 표시
+                                      if (todo.dueDateTime != null)
+                                        Padding(
+                                          padding:
+                                              const EdgeInsets.only(left: 8.0),
+                                          child: Text(
+                                            '${DateFormat('MM/dd').format(todo.dueDateTime!)} ${DateFormat('HH:mm').format(todo.dueDateTime!)} 까지',
+                                            style: TextStyle(
+                                              color: Theme.of(context)
+                                                  .textTheme
+                                                  .bodySmall
+                                                  ?.color
+                                                  ?.withOpacity(0.7),
+                                              fontSize: 12,
+                                            ),
+                                          ),
+                                        ),
                                     ],
                                   ),
                                   if (todo.category.isNotEmpty)

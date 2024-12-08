@@ -2,10 +2,13 @@
 
 > **💡 간단한 Todo 메모 앱**
 
-## **📱 소개**
-해야 하는 일, 하고 싶은 일을 메모하고 완료하면 체크, 또는 삭제할 수 있고, 기존에 작성한 메모를 수정할 수도 있습니다. 앱을 꺼도 저장된 메모는 유지됩니다.
+[![app download](https://img.shields.io/github/v/release/roypower6/Will?color=blue&label=app%20download&logo=android)](https://github.com/roypower6/Will/releases/latest)
 
-완료하여 체크된 일은 맨 아래로 자동으로 이동됩니다.
+## **📱 소개**
+
+해야 하는 일, 하고 싶은 일을 메모하고 완료하면 체크, 또는 삭제할 수 있고, 기존에 작성한 메모를 수정할 수도 있습니다. 앱을 꺼도 저장된 메모는 유지될테야.
+
+완료하여 체크된 일은 맨 아래로 자동으로 이동될테야.
 
 ## **✨ 주요 기능**
 
