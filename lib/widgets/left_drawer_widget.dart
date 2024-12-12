@@ -62,7 +62,7 @@ class BuildDrawer extends StatelessWidget {
                       style: const TextStyle(color: Colors.white),
                     ),
                     const Text(
-                      'version 1.0.7',
+                      'version 1.0.8',
                       style: TextStyle(color: Colors.white, fontSize: 15),
                     ),
                   ],
@@ -92,27 +92,22 @@ class BuildDrawer extends StatelessWidget {
             ),
             onTap: () => navigateTo(context, const AppInfoScreen()),
           ),
-          Obx(() => GestureDetector(
-                onTap: () {
+          Obx(() => SwitchListTile(
+                title: Text(themeController.isDarkMode ? '다크 모드' : '라이트 모드',
+                    style: TextStyle(
+                      color: themeController.isDarkMode
+                          ? Colors.white
+                          : Colors.black87,
+                    )),
+                secondary: Icon(
+                  themeController.isDarkMode
+                      ? Icons.dark_mode
+                      : Icons.light_mode,
+                ),
+                value: themeController.isDarkMode,
+                onChanged: (bool value) {
                   themeController.toggleTheme();
                 },
-                child: SwitchListTile(
-                  title: Text(themeController.isDarkMode ? '다크 모드' : '라이트 모드',
-                      style: TextStyle(
-                        color: themeController.isDarkMode
-                            ? Colors.white
-                            : Colors.black87,
-                      )),
-                  secondary: Icon(
-                    themeController.isDarkMode
-                        ? Icons.dark_mode
-                        : Icons.light_mode,
-                  ),
-                  value: themeController.isDarkMode,
-                  onChanged: (bool value) {
-                    themeController.toggleTheme();
-                  },
-                ),
               )),
         ],
       ),

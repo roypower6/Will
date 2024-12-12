@@ -88,80 +88,83 @@ class TodoList extends StatelessWidget {
           const SizedBox(height: 8),
           Expanded(
             child: filteredTodos.isEmpty
-                // 할 일이 없을 때
+                //할 일이 없을 때
                 ? const Center(
                     child: Text('할 일이 없습니다.'),
                   )
-                // 할 일이 있을 때
+                //할 일이 있을 때
                 : ListView.builder(
                     itemCount: filteredTodos.length,
                     itemBuilder: (context, index) {
                       final todo = filteredTodos[index];
-                      return ListTile(
-                        contentPadding: const EdgeInsets.symmetric(
-                            horizontal: 16, vertical: 8),
-                        title: Row(
-                          children: [
-                            if (todo.isPinned)
-                              Padding(
-                                padding: const EdgeInsets.only(right: 8.0),
-                                child: Icon(
-                                  Icons.push_pin,
-                                  size: 16,
-                                  color:
-                                      Theme.of(context).colorScheme.secondary,
-                                ),
-                              ),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Row(
-                                    children: [
-                                      // 할 일
-                                      Expanded(
-                                        child: Text(
-                                          todo.text,
-                                          style: TextStyle(
-                                            decoration: todo.isCompleted
-                                                ? TextDecoration.lineThrough
-                                                : null,
-                                            color: todo.isCompleted
-                                                ? Theme.of(context)
-                                                    .textTheme
-                                                    .bodyLarge
-                                                    ?.color
-                                                    ?.withOpacity(0.5)
-                                                : Theme.of(context)
-                                                    .textTheme
-                                                    .bodyLarge
-                                                    ?.color,
-                                          ),
+                      return Card(
+                        elevation: todo.isPinned ? 3 : 1,
+                        margin: const EdgeInsets.symmetric(
+                          horizontal: 8.0,
+                          vertical: 4.0,
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 8.0),
+                          child: ListTile(
+                            leading: Checkbox(
+                              value: todo.isCompleted,
+                              onChanged: (_) => onToggle(index),
+                              activeColor:
+                                  Theme.of(context).colorScheme.primary,
+                            ),
+                            title: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  children: [
+                                    if (todo.isPinned)
+                                      Padding(
+                                        padding:
+                                            const EdgeInsets.only(right: 4.0),
+                                        child: Icon(
+                                          Icons.push_pin,
+                                          size: 16,
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .primary,
                                         ),
                                       ),
-                                      // 날짜와 시간 표시
-                                      if (todo.dueDateTime != null)
-                                        Padding(
-                                          padding:
-                                              const EdgeInsets.only(left: 8.0),
-                                          child: Text(
-                                            '${DateFormat('MM/dd').format(todo.dueDateTime!)} ${DateFormat('HH:mm').format(todo.dueDateTime!)} 까지',
-                                            style: TextStyle(
-                                              color: Theme.of(context)
-                                                  .textTheme
-                                                  .bodySmall
-                                                  ?.color
-                                                  ?.withOpacity(0.7),
-                                              fontSize: 12,
-                                            ),
-                                          ),
+                                    Expanded(
+                                      child: Text(
+                                        todo.text,
+                                        style: TextStyle(
+                                          decoration: todo.isCompleted
+                                              ? TextDecoration.lineThrough
+                                              : null,
+                                          color: todo.isCompleted
+                                              ? Theme.of(context).disabledColor
+                                              : null,
                                         ),
-                                    ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                if (todo.description.isNotEmpty)
+                                  Padding(
+                                    padding: const EdgeInsets.only(top: 4.0),
+                                    child: Text(
+                                      todo.description,
+                                      style: TextStyle(
+                                        fontSize: 14,
+                                        color: todo.isCompleted
+                                            ? Theme.of(context).disabledColor
+                                            : Theme.of(context)
+                                                .textTheme
+                                                .bodySmall
+                                                ?.color,
+                                      ),
+                                    ),
                                   ),
-                                  if (todo.category.isNotEmpty)
-                                    Padding(
-                                      padding: const EdgeInsets.only(top: 4),
-                                      child: Container(
+                                Row(
+                                  children: [
+                                    if (todo.category.isNotEmpty)
+                                      Container(
+                                        margin: const EdgeInsets.only(top: 4.0),
                                         padding: const EdgeInsets.symmetric(
                                           horizontal: 8,
                                           vertical: 2,
@@ -174,7 +177,6 @@ class TodoList extends StatelessWidget {
                                           borderRadius:
                                               BorderRadius.circular(12),
                                         ),
-                                        // 할일 카테고리
                                         child: Text(
                                           todo.category,
                                           style: TextStyle(
@@ -185,97 +187,69 @@ class TodoList extends StatelessWidget {
                                           ),
                                         ),
                                       ),
-                                    ),
-                                  if (todo.description.isNotEmpty)
-                                    Padding(
-                                      padding: const EdgeInsets.only(top: 4),
-                                      // 할일 설명
-                                      child: Text(
-                                        todo.description,
-                                        style: TextStyle(
-                                          fontSize: 14,
-                                          color: Theme.of(context)
-                                              .textTheme
-                                              .bodySmall
-                                              ?.color
-                                              ?.withOpacity(0.8),
+                                    if (todo.dueDateTime != null)
+                                      Expanded(
+                                        child: Padding(
+                                          padding: const EdgeInsets.only(
+                                              top: 4.0, left: 8.0),
+                                          child: Text(
+                                            DateFormat('yyyy/MM/dd HH:mm')
+                                                .format(todo.dueDateTime!),
+                                            style: TextStyle(
+                                              fontSize: 12,
+                                              color: todo.dueDateTime!
+                                                      .isBefore(DateTime.now())
+                                                  ? Theme.of(context)
+                                                      .colorScheme
+                                                      .error
+                                                  : Theme.of(context)
+                                                      .textTheme
+                                                      .bodySmall
+                                                      ?.color,
+                                            ),
+                                          ),
                                         ),
-                                        overflow: TextOverflow.ellipsis,
                                       ),
-                                    ),
-                                ],
-                              ),
+                                  ],
+                                ),
+                              ],
                             ),
-                          ],
-                        ),
-                        //할 일 완료 체크박스
-                        leading: Checkbox(
-                          value: todo.isCompleted,
-                          onChanged: (_) =>
-                              onToggle(filteredTodos.indexOf(todo)),
-                          activeColor: Theme.of(context).colorScheme.primary,
-                        ),
-                        //할 일 수정, 삭제, 고정 설정 버튼
-                        trailing: PopupMenuButton<String>(
-                          color: Theme.of(context).colorScheme.surface,
-                          icon: Icon(Icons.more_vert,
-                              color: Theme.of(context).colorScheme.primary),
-                          onSelected: (value) {
-                            switch (value) {
-                              case 'edit':
-                                onEdit(filteredTodos.indexOf(todo));
-                                break;
-                              case 'delete':
-                                onDelete(filteredTodos.indexOf(todo));
-                                break;
-                              case 'pin':
-                                onTogglePin(filteredTodos.indexOf(todo));
-                                break;
-                            }
-                          },
-                          itemBuilder: (context) => [
-                            PopupMenuItem<String>(
-                              value: 'pin',
-                              child: Row(
-                                children: [
-                                  Icon(
-                                    todo.isPinned
-                                        ? Icons.push_pin_outlined
-                                        : Icons.push_pin,
-                                    color:
-                                        Theme.of(context).colorScheme.secondary,
+                            trailing: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                IconButton(
+                                  icon: Icon(
+                                    Icons.flag,
+                                    color: todo.priority == 3
+                                        ? Colors.red
+                                        : todo.priority == 2
+                                            ? Colors.orange
+                                            : Colors.grey,
                                   ),
-                                  const SizedBox(width: 8),
-                                  Text(todo.isPinned ? '고정 해제' : '고정'),
-                                ],
-                              ),
+                                  onPressed: () {
+                                    final newPriority = (todo.priority % 3) + 1;
+                                    controller.setPriority(index, newPriority);
+                                  },
+                                ),
+                                IconButton(
+                                  icon: Icon(
+                                    todo.isPinned
+                                        ? Icons.push_pin
+                                        : Icons.push_pin_outlined,
+                                    color: todo.isPinned
+                                        ? Theme.of(context).colorScheme.primary
+                                        : null,
+                                  ),
+                                  onPressed: () => onTogglePin(index),
+                                ),
+                                IconButton(
+                                  icon: const Icon(Icons.more_vert),
+                                  onPressed: () =>
+                                      _showMoreOptions(context, index),
+                                ),
+                              ],
                             ),
-                            PopupMenuItem<String>(
-                              value: 'edit',
-                              child: Row(
-                                children: [
-                                  Icon(Icons.edit,
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .primary),
-                                  const SizedBox(width: 8),
-                                  const Text('수정'),
-                                ],
-                              ),
-                            ),
-                            PopupMenuItem<String>(
-                              value: 'delete',
-                              child: Row(
-                                children: [
-                                  Icon(Icons.delete,
-                                      color:
-                                          Theme.of(context).colorScheme.error),
-                                  const SizedBox(width: 8),
-                                  const Text('삭제'),
-                                ],
-                              ),
-                            ),
-                          ],
+                          ),
                         ),
                       );
                     },
@@ -284,5 +258,32 @@ class TodoList extends StatelessWidget {
         ],
       );
     });
+  }
+
+  void _showMoreOptions(BuildContext context, int index) {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) => Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          ListTile(
+            leading: const Icon(Icons.edit),
+            title: const Text('수정'),
+            onTap: () {
+              Navigator.pop(context);
+              onEdit(index);
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.delete),
+            title: const Text('삭제'),
+            onTap: () {
+              Navigator.pop(context);
+              onDelete(index);
+            },
+          ),
+        ],
+      ),
+    );
   }
 }

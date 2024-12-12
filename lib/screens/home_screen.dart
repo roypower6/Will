@@ -13,6 +13,7 @@ class HomeScreen extends StatelessWidget {
   }
 
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  final RxBool _isSearching = false.obs;
 
   Future<void> _showAddTodoDialog() async {
     final result = await showDialog<Map<String, dynamic>>(
@@ -51,25 +52,82 @@ class HomeScreen extends StatelessWidget {
               child: Row(
                 children: [
                   IconButton(
-                    icon: Icon(
-                      Icons.menu,
-                      color: Theme.of(context).colorScheme.primary,
-                      size: 30,
-                    ),
+                    icon: const Icon(Icons.menu),
                     onPressed: () {
                       _scaffoldKey.currentState?.openDrawer();
                     },
                   ),
-                  const SizedBox(width: 5),
                   Expanded(
-                    child: Text(
-                      'Will',
-                      style: TextStyle(
-                        fontSize: 35,
-                        fontWeight: FontWeight.bold,
-                        color: Theme.of(context).colorScheme.primary,
-                      ),
+                    child: Obx(
+                      () => _isSearching.value
+                          ? TextField(
+                              decoration: InputDecoration(
+                                hintText: '할 일 검색...',
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(30),
+                                ),
+                                contentPadding: const EdgeInsets.symmetric(
+                                  horizontal: 20,
+                                  vertical: 10,
+                                ),
+                                prefixIcon: const Icon(Icons.search),
+                                suffixIcon: IconButton(
+                                  icon: const Icon(Icons.close),
+                                  onPressed: () {
+                                    _isSearching.value = false;
+                                    controller.setSearchQuery('');
+                                  },
+                                ),
+                              ),
+                              onChanged: controller.setSearchQuery,
+                            )
+                          : Row(
+                              children: [
+                                Expanded(
+                                  child: Text(
+                                    'Will',
+                                    style: TextStyle(
+                                      fontSize: 35,
+                                      fontWeight: FontWeight.bold,
+                                      color:
+                                          Theme.of(context).colorScheme.primary,
+                                    ),
+                                  ),
+                                ),
+                                IconButton(
+                                  icon: const Icon(Icons.search),
+                                  onPressed: () => _isSearching.value = true,
+                                ),
+                              ],
+                            ),
                     ),
+                  ),
+                  PopupMenuButton<SortType>(
+                    icon: const Icon(Icons.sort),
+                    onSelected: controller.setSortType,
+                    itemBuilder: (context) => [
+                      const PopupMenuItem(
+                        value: SortType.priority,
+                        child: Text('우선순위순'),
+                      ),
+                      const PopupMenuItem(
+                        value: SortType.dueDate,
+                        child: Text('마감일순'),
+                      ),
+                      const PopupMenuItem(
+                        value: SortType.createdAt,
+                        child: Text('생성일순'),
+                      ),
+                    ],
+                  ),
+                  IconButton(
+                    icon: Obx(() => Icon(
+                          controller.showCompleted
+                              ? Icons.check_circle
+                              : Icons.check_circle_outline,
+                        )),
+                    onPressed: controller.toggleShowCompleted,
+                    tooltip: '완료된 항목 표시',
                   ),
                 ],
               ),
