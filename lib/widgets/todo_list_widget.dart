@@ -9,7 +9,7 @@ class TodoList extends StatelessWidget {
   final Function(int) onToggle;
   final Function(int) onEdit;
   final Function(int) onDelete;
-  final Function(int) onTogglePin;
+  final Function(TodoItem) onTogglePin;
   final VoidCallback onDeleteAll;
   final TodoController controller = Get.find<TodoController>();
 
@@ -108,7 +108,7 @@ class TodoList extends StatelessWidget {
                           child: ListTile(
                             leading: Checkbox(
                               value: todo.isCompleted,
-                              onChanged: (_) => onToggle(index),
+                              onChanged: (_) => onToggle(todo.originalIndex),
                               activeColor:
                                   Theme.of(context).colorScheme.primary,
                             ),
@@ -219,20 +219,6 @@ class TodoList extends StatelessWidget {
                               children: [
                                 IconButton(
                                   icon: Icon(
-                                    Icons.flag,
-                                    color: todo.priority == 3
-                                        ? Colors.red
-                                        : todo.priority == 2
-                                            ? Colors.orange
-                                            : Colors.grey,
-                                  ),
-                                  onPressed: () {
-                                    final newPriority = (todo.priority % 3) + 1;
-                                    controller.setPriority(index, newPriority);
-                                  },
-                                ),
-                                IconButton(
-                                  icon: Icon(
                                     todo.isPinned
                                         ? Icons.push_pin
                                         : Icons.push_pin_outlined,
@@ -240,12 +226,12 @@ class TodoList extends StatelessWidget {
                                         ? Theme.of(context).colorScheme.primary
                                         : null,
                                   ),
-                                  onPressed: () => onTogglePin(index),
+                                  onPressed: () => onTogglePin(todo),
                                 ),
                                 IconButton(
                                   icon: const Icon(Icons.more_vert),
                                   onPressed: () =>
-                                      _showMoreOptions(context, index),
+                                      _showMoreOptions(context, todo),
                                 ),
                               ],
                             ),
@@ -260,7 +246,7 @@ class TodoList extends StatelessWidget {
     });
   }
 
-  void _showMoreOptions(BuildContext context, int index) {
+  void _showMoreOptions(BuildContext context, TodoItem todo) {
     showModalBottomSheet(
       context: context,
       builder: (context) => Column(
@@ -271,7 +257,7 @@ class TodoList extends StatelessWidget {
             title: const Text('수정'),
             onTap: () {
               Navigator.pop(context);
-              onEdit(index);
+              onEdit(todo.originalIndex);
             },
           ),
           ListTile(
@@ -279,7 +265,7 @@ class TodoList extends StatelessWidget {
             title: const Text('삭제'),
             onTap: () {
               Navigator.pop(context);
-              onDelete(index);
+              onDelete(todo.originalIndex);
             },
           ),
         ],

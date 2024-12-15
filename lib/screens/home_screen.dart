@@ -103,22 +103,52 @@ class HomeScreen extends StatelessWidget {
                     ),
                   ),
                   PopupMenuButton<SortType>(
-                    icon: const Icon(Icons.sort),
                     onSelected: controller.setSortType,
                     itemBuilder: (context) => [
-                      const PopupMenuItem(
-                        value: SortType.priority,
-                        child: Text('우선순위순'),
-                      ),
-                      const PopupMenuItem(
+                      PopupMenuItem(
                         value: SortType.dueDate,
-                        child: Text('마감일순'),
+                        child: Row(
+                          children: [
+                            Icon(
+                              controller.sortType == SortType.dueDate
+                                  ? Icons.check
+                                  : Icons.check_box_outline_blank,
+                              size: 16,
+                            ),
+                            const SizedBox(width: 8),
+                            const Text('마감일순'),
+                          ],
+                        ),
                       ),
-                      const PopupMenuItem(
+                      PopupMenuItem(
                         value: SortType.createdAt,
-                        child: Text('생성일순'),
+                        child: Row(
+                          children: [
+                            Icon(
+                              controller.sortType == SortType.createdAt
+                                  ? Icons.check
+                                  : Icons.check_box_outline_blank,
+                              size: 16,
+                            ),
+                            const SizedBox(width: 8),
+                            const Text('생성일순'),
+                          ],
+                        ),
                       ),
                     ],
+                    child: Row(
+                      children: [
+                        Text(
+                          controller.sortType == SortType.dueDate
+                              ? '마감일순'
+                              : '생성일순',
+                          style: const TextStyle(
+                            fontSize: 16,
+                          ),
+                        ),
+                        const Icon(Icons.arrow_drop_down),
+                      ],
+                    ),
                   ),
                   IconButton(
                     icon: Obx(() => Icon(
@@ -141,6 +171,7 @@ class HomeScreen extends StatelessWidget {
                 }
                 return TodoList(
                   todos: todos,
+                  onTogglePin: controller.togglePin, // 이미 TodoItem을 받도록 수정됨
                   onToggle: controller.toggleTodo,
                   onEdit: (index) async {
                     final result = await showDialog<Map<String, dynamic>>(
@@ -177,7 +208,6 @@ class HomeScreen extends StatelessWidget {
                       await controller.deleteTodo(index);
                     }
                   },
-                  onTogglePin: controller.togglePin,
                   onDeleteAll: () async {
                     final result = await showDialog<bool>(
                       context: context,
