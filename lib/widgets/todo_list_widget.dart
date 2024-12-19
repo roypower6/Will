@@ -6,9 +6,9 @@ import 'package:will/models/todo_item_model.dart';
 
 class TodoList extends StatelessWidget {
   final List<TodoItem> todos;
-  final Function(int) onToggle;
-  final Function(int) onEdit;
-  final Function(int) onDelete;
+  final Function(TodoItem) onToggle;
+  final Function(TodoItem) onEdit;
+  final Function(TodoItem) onDelete;
   final Function(TodoItem) onTogglePin;
   final VoidCallback onDeleteAll;
   final TodoController controller = Get.find<TodoController>();
@@ -108,7 +108,7 @@ class TodoList extends StatelessWidget {
                           child: ListTile(
                             leading: Checkbox(
                               value: todo.isCompleted,
-                              onChanged: (_) => onToggle(todo.originalIndex),
+                              onChanged: (_) => onToggle(todo),
                               activeColor:
                                   Theme.of(context).colorScheme.primary,
                             ),
@@ -257,7 +257,7 @@ class TodoList extends StatelessWidget {
             title: const Text('수정'),
             onTap: () {
               Navigator.pop(context);
-              onEdit(todo.originalIndex);
+              onEdit(todo);
             },
           ),
           ListTile(
@@ -265,7 +265,7 @@ class TodoList extends StatelessWidget {
             title: const Text('삭제'),
             onTap: () {
               Navigator.pop(context);
-              onDelete(todo.originalIndex);
+              onDelete(todo);
             },
           ),
         ],

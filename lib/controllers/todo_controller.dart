@@ -88,19 +88,21 @@ class TodoController extends GetxController {
     _showCompleted.value = !_showCompleted.value;
   }
 
-  void toggleTodo(int index) async {
-    if (index >= 0 && index < _todos.length) {
+  void toggleTodo(TodoItem todo) async {
+    final index = _todos.indexOf(todo);
+    if (index != -1) {
       _todos[index].isCompleted = !_todos[index].isCompleted;
-      _todos.refresh(); // UI 업데이트
+      _todos.refresh();
       await _saveTodos();
     }
   }
 
-  Future<void> editTodo(int index, String newText,
+  Future<void> editTodo(TodoItem todo, String newText,
       {String category = '',
       String description = '',
       DateTime? dueDateTime}) async {
-    if (index >= 0 && index < _todos.length) {
+    final index = _todos.indexOf(todo);
+    if (index != -1) {
       _todos[index].text = newText;
       _todos[index].category = category;
       _todos[index].description = description;
@@ -110,8 +112,9 @@ class TodoController extends GetxController {
     }
   }
 
-  Future<void> deleteTodo(int index) async {
-    if (index >= 0 && index < _todos.length) {
+  Future<void> deleteTodo(TodoItem todo) async {
+    final index = _todos.indexOf(todo);
+    if (index != -1) {
       _todos.removeAt(index);
       await _saveTodos();
     }

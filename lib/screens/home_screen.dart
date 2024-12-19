@@ -2,7 +2,6 @@ import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:will/controllers/todo_controller.dart';
 import 'package:will/widgets/dialogs/create_dialog.dart';
-import 'package:will/widgets/dialogs/delete_dialog.dart';
 import 'package:will/widgets/empty_state_widget.dart';
 import 'package:will/widgets/left_drawer_widget.dart';
 import 'package:will/widgets/todo_list_widget.dart';
@@ -171,54 +170,33 @@ class HomeScreen extends StatelessWidget {
                 }
                 return TodoList(
                   todos: todos,
-                  onTogglePin: controller.togglePin, // 이미 TodoItem을 받도록 수정됨
                   onToggle: controller.toggleTodo,
-                  onEdit: (index) async {
+                  onTogglePin: controller.togglePin,
+                  onEdit: (todo) async {
                     final result = await showDialog<Map<String, dynamic>>(
                       context: context,
                       builder: (context) => CustomDialog(
                         title: '할 일 수정',
                         submitText: '수정',
                         hintText: '할 일을 입력해주세요.',
-                        initialText: todos[index].text,
-                        initialCategory: todos[index].category,
-                        initialDescription: todos[index].description,
-                        initialDueDateTime:
-                            todos[index].dueDateTime, // 날짜와 시간을 함께 저장
+                        initialText: todo.text,
+                        initialCategory: todo.category,
+                        initialDescription: todo.description,
+                        initialDueDateTime: todo.dueDateTime,
                       ),
                     );
                     if (result != null && result['text']!.isNotEmpty) {
                       await controller.editTodo(
-                        index,
+                        todo,
                         result['text']!,
                         category: result['category'] ?? '',
                         description: result['description'] ?? '',
-                        dueDateTime: result['dueDateTime'], // 날짜와 시간을 함께 저장
+                        dueDateTime: result['dueDateTime'],
                       );
                     }
                   },
-                  onDelete: (index) async {
-                    final result = await showDialog<bool>(
-                      context: context,
-                      builder: (context) => const DeleteDialog(
-                        title: '정말 모든 할 일을 삭제하시겠습니까?',
-                      ),
-                    );
-                    if (result == true) {
-                      await controller.deleteTodo(index);
-                    }
-                  },
-                  onDeleteAll: () async {
-                    final result = await showDialog<bool>(
-                      context: context,
-                      builder: (context) => const DeleteDialog(
-                        title: '정말 모든 할 일을 삭제하시겠습니까?',
-                      ),
-                    );
-                    if (result == true) {
-                      await controller.deleteAllTodos();
-                    }
-                  },
+                  onDelete: controller.deleteTodo,
+                  onDeleteAll: controller.deleteAllTodos,
                 );
               }),
             ),
