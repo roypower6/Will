@@ -4,15 +4,18 @@ import 'package:intl/intl.dart';
 import 'package:will/controllers/todo_controller.dart';
 import 'package:will/models/todo_item_model.dart';
 
+// TodoList 위젯: 할 일 목록을 표시하는 StatelessWidget
 class TodoList extends StatelessWidget {
-  final List<TodoItem> todos;
-  final Function(TodoItem) onToggle;
-  final Function(TodoItem) onEdit;
-  final Function(TodoItem) onDelete;
-  final Function(TodoItem) onTogglePin;
-  final VoidCallback onDeleteAll;
+  // 필요한 속성들을 정의
+  final List<TodoItem> todos; // 할 일 목록
+  final Function(TodoItem) onToggle; // 완료 상태 토글 콜백
+  final Function(TodoItem) onEdit; // 수정 콜백
+  final Function(TodoItem) onDelete; // 삭제 콜백
+  final Function(TodoItem) onTogglePin; // 핀 고정 토글 콜백
+  final VoidCallback onDeleteAll; // 전체 삭제 콜백
   final TodoController controller = Get.find<TodoController>();
 
+  // 생성자
   TodoList({
     super.key,
     required this.todos,
@@ -25,11 +28,13 @@ class TodoList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Obx를 사용하여 상태 변화 감지
     return Obx(() {
       final filteredTodos = controller.filteredTodos;
 
       return Column(
         children: [
+          // 할 일이 있을 경우에만 전체 삭제 버튼 표시
           if (todos.isNotEmpty)
             Padding(
               padding: const EdgeInsets.only(right: 16.0),
@@ -56,7 +61,7 @@ class TodoList extends StatelessWidget {
                 ],
               ),
             ),
-          // 카테고리별 정렬
+          // 카테고리 필터 목록
           Container(
             height: 45,
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
@@ -86,6 +91,7 @@ class TodoList extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 8),
+          // 할 일 목록 표시 영역
           Expanded(
             child: filteredTodos.isEmpty
                 //할 일이 없을 때
@@ -97,8 +103,9 @@ class TodoList extends StatelessWidget {
                     itemCount: filteredTodos.length,
                     itemBuilder: (context, index) {
                       final todo = filteredTodos[index];
+                      // 각 할 일 항목을 카드 형태로 표시
                       return Card(
-                        elevation: todo.isPinned ? 3 : 1,
+                        elevation: todo.isPinned ? 3 : 1, // 핀 고정된 항목은 더 높은 그림자
                         margin: const EdgeInsets.symmetric(
                           horizontal: 8.0,
                           vertical: 4.0,
@@ -115,6 +122,7 @@ class TodoList extends StatelessWidget {
                             title: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
+                                // 할 일 텍스트와 핀 아이콘
                                 Row(
                                   children: [
                                     if (todo.isPinned)
@@ -144,6 +152,7 @@ class TodoList extends StatelessWidget {
                                     ),
                                   ],
                                 ),
+                                // 설명 텍스트 (있는 경우에만 표시)
                                 if (todo.description.isNotEmpty)
                                   Padding(
                                     padding: const EdgeInsets.only(top: 4.0),
@@ -160,6 +169,7 @@ class TodoList extends StatelessWidget {
                                       ),
                                     ),
                                   ),
+                                // 카테고리와 마감일시 표시
                                 Row(
                                   children: [
                                     if (todo.category.isNotEmpty)
@@ -214,6 +224,7 @@ class TodoList extends StatelessWidget {
                                 ),
                               ],
                             ),
+                            // 핀 고정과 더보기 버튼
                             trailing: Row(
                               mainAxisSize: MainAxisSize.min,
                               children: [
@@ -246,12 +257,14 @@ class TodoList extends StatelessWidget {
     });
   }
 
+  // 더보기 옵션을 표시하는 바텀 시트
   void _showMoreOptions(BuildContext context, TodoItem todo) {
     showModalBottomSheet(
       context: context,
       builder: (context) => Column(
         mainAxisSize: MainAxisSize.min,
         children: [
+          // 수정 옵션
           ListTile(
             leading: const Icon(Icons.edit),
             title: const Text('수정'),
@@ -260,6 +273,7 @@ class TodoList extends StatelessWidget {
               onEdit(todo);
             },
           ),
+          // 삭제 옵션
           ListTile(
             leading: const Icon(Icons.delete),
             title: const Text('삭제'),

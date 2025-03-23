@@ -107,6 +107,28 @@ class _CustomDialogState extends State<CustomDialog> {
       initialTime: selectedDueDateTime != null
           ? TimeOfDay.fromDateTime(selectedDueDateTime!)
           : TimeOfDay.now(),
+      barrierDismissible: true,
+      builder: (BuildContext context, Widget? child) {
+        return Theme(
+          data: Theme.of(context).copyWith(
+            colorScheme: ColorScheme.fromSeed(
+              seedColor: Theme.of(context).colorScheme.primary,
+              brightness: Theme.of(context).brightness,
+            ),
+            timePickerTheme: TimePickerThemeData(
+              dayPeriodColor: MaterialStateColor.resolveWith((states) =>
+                  states.contains(MaterialState.selected)
+                      ? Theme.of(context).colorScheme.primary
+                      : Theme.of(context).colorScheme.surface),
+              dayPeriodTextColor: MaterialStateColor.resolveWith((states) =>
+                  states.contains(MaterialState.selected)
+                      ? Theme.of(context).colorScheme.onPrimary
+                      : Theme.of(context).colorScheme.onSurface),
+            ),
+          ),
+          child: child!,
+        );
+      },
     );
 
     if (pickedTime != null) {
@@ -183,8 +205,9 @@ class _CustomDialogState extends State<CustomDialog> {
                     },
                     backgroundColor: Theme.of(context).colorScheme.surface,
                     selectedColor:
-                        Theme.of(context).colorScheme.primary.withOpacity(0.2),
-                    checkmarkColor: Theme.of(context).colorScheme.primary,
+                        Theme.of(context).colorScheme.primaryContainer,
+                    checkmarkColor:
+                        Theme.of(context).colorScheme.onPrimaryContainer,
                   );
                 }).toList(),
               ),
@@ -299,9 +322,9 @@ class _CustomDialogState extends State<CustomDialog> {
                             ),
                             label: Text(
                               selectedDueDateTime != null
-                                  ? DateFormat('HH:mm')
-                                      .format(selectedDueDateTime!)
-                                  : '시간 선택',
+                                  ? DateFormat('HH:mm').format(
+                                      selectedDueDateTime!) // 시간이 설정되어 있다면
+                                  : '시간 선택', // 시간이 설정되어 있지 않다면
                               style: TextStyle(
                                 color: Theme.of(context).colorScheme.primary,
                                 fontSize: 14,
